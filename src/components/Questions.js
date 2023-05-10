@@ -9,6 +9,7 @@ export default function Questions() {
   const [loading, setLoading] = useState(true)
   const [selectedChoice, setSelectedChoice] = useState([])
   const [shuffledChoices, setShuffledChoices] = useState([])
+  const [showCorrectAnswers, setShowCorrectAnswers] = useState(false)
 
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5")
@@ -16,7 +17,7 @@ export default function Questions() {
       .then(data => {
         setTimeout(() => {
           setLoading(false)
-        }, 1000)
+        }, 1000);
         setQuestions(data.results)
       })
   }, [])
@@ -55,6 +56,11 @@ export default function Questions() {
     })
   }
 
+  // Function to check answer and show correct answers
+  const handleCheckAnswers = () => {
+    setShowCorrectAnswers(true)
+  }
+
   return (
     <div className="container justify-content-center">
       <Blobs className="blobs-background" />
@@ -69,10 +75,13 @@ export default function Questions() {
               <p className="questions-text">{decodedQuestion}</p>
               <div className="d-flex gap-2">
                 {decodedChoices.map((choice, choiceIndex) => {
+                  const isCorrectAnswer = choiceIndex === shuffledChoices[questionIndex].indexOf(he.decode(question.correct_answer))
+                  const isCorrect = showCorrectAnswers && isCorrectAnswer
+
                   const buttonStyle = {
-                    backgroundColor: isSelected && selectedChoice[questionIndex] === choiceIndex ? "#D6DBF5" : "transparent",
+                    backgroundColor: isSelected && selectedChoice[questionIndex] === choiceIndex ? "#D6DBF5" : isCorrect ? "#94D7A2" : "transparent",
                     color: isSelected && selectedChoice[questionIndex] === choiceIndex ? "#293264" : "#4D5B9E"
-                  }
+                  };
 
                   return (
                     <Button
@@ -81,7 +90,7 @@ export default function Questions() {
                       className="mb-1 choices-btn"
                       style={buttonStyle}
                       onClick={() => handleChoiceClick(questionIndex, choiceIndex)}
-                      disabled={isSelected}
+                      disabled={isSelected || showCorrectAnswers}
                     >
                       {choice}
                     </Button>
@@ -90,10 +99,11 @@ export default function Questions() {
               </div>
               <hr />
             </div>
-          )
+          );
         })}
-        <button className="btn submit-btn">Check Answers</button>
-      </div>
+        <button className="btn submit-btn"
+ onClick={handleCheckAnswers}>Check Answers</button>
+        </div>
     </div>
   )
 }
@@ -106,3 +116,4 @@ const shuffleChoices = (choices) => {
   }
   return choices
 }
+
