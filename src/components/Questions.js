@@ -10,6 +10,8 @@ export default function Questions() {
   const [selectedChoice, setSelectedChoice] = useState([])
   const [shuffledChoices, setShuffledChoices] = useState([])
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false)
+  const [correctAnswerCount, setCorrectAnswerCount] = useState(0)
+  const [showResult, setShowResult] = useState(false)
 
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5")
@@ -54,11 +56,18 @@ export default function Questions() {
       updatedChoice[questionIndex] = choiceIndex
       return updatedChoice
     })
+
+    const question = questions[questionIndex]
+    const isCorrectAnswer = choiceIndex === shuffledChoices[questionIndex].indexOf(he.decode(question.correct_answer))
+    if(isCorrectAnswer){
+      setCorrectAnswerCount(prevCount => prevCount + 1)
+    }
   }
 
   // Function to check answer and show correct answers
   const handleCheckAnswers = () => {
     setShowCorrectAnswers(true)
+    setShowResult(true)
   }
 
   return (
@@ -101,8 +110,12 @@ export default function Questions() {
             </div>
           );
         })}
-        <button className="btn submit-btn"
- onClick={handleCheckAnswers}>Check Answers</button>
+              <div className="container text-center">
+                {showResult && <p><strong>Score: {correctAnswerCount}/5</strong></p>}
+              </div>
+              <button className="btn submit-btn" onClick={handleCheckAnswers}>
+                Check Answers
+              </button>
         </div>
     </div>
   )
