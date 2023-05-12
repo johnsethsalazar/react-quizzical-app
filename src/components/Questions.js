@@ -12,6 +12,7 @@ export default function Questions() {
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false)
   const [correctAnswerCount, setCorrectAnswerCount] = useState(0)
   const [showResult, setShowResult] = useState(false)
+  const [playAgain, setPlayAgain] = useState(false)
 
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=5")
@@ -56,18 +57,40 @@ export default function Questions() {
       updatedChoice[questionIndex] = choiceIndex
       return updatedChoice
     })
-
-    const question = questions[questionIndex]
-    const isCorrectAnswer = choiceIndex === shuffledChoices[questionIndex].indexOf(he.decode(question.correct_answer))
-    if(isCorrectAnswer){
-      setCorrectAnswerCount(prevCount => prevCount + 1)
-    }
   }
 
-  // Function to check answer and show correct answers
+  // Function to check answer and show correct answers and display the score when 'Check Answers' button is clicked
   const handleCheckAnswers = () => {
     setShowCorrectAnswers(true)
     setShowResult(true)
+
+    let count = 0
+    questions.forEach((question, questionIndex) => {
+      const isCorrectAnswer = selectedChoice[questionIndex] === shuffledChoices.indexOf(he.decode(question.correct_answer))
+      if(isCorrectAnswer){
+        count++
+      }
+    })
+    setCorrectAnswerCount(count)
+  }
+
+  //function to reset the game and load new set of questions
+  const handlePlayAgain = () => {
+    setPlayAgain(true)
+    setLoading(true)
+    setSelectedChoice([])
+    setShowCorrectAnswers(false)
+    setShowResult(false)
+    setCorrectAnswerCount(0)
+
+    fetch("https://opentdb.com/api.php?amount=5")
+    .then(res => res.json())
+    .then(data => {
+      setTimeout(() => {
+        setLoading(false)
+      }, 1000)
+      setQuestions(data.results)
+    })
   }
 
   return (
@@ -113,9 +136,12 @@ export default function Questions() {
               <div className="container text-center">
                 {showResult && <p><strong>Score: {correctAnswerCount}/5</strong></p>}
               </div>
-              <button className="btn submit-btn" onClick={handleCheckAnswers}>
-                Check Answers
-              </button>
+              <div className="container text-center d-inline">
+                <button className="btn submit-btn m-2" onClick={handleCheckAnswers}>
+                  Check Answers
+                </button>
+                {showResult && <button className="btn submit-btn play-again-btn m-2" onClick={handlePlayAgain}>Play Again</button>}
+              </div>
         </div>
     </div>
   )
