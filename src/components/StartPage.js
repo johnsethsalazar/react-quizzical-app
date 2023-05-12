@@ -21,7 +21,7 @@ export default function StartPage() {
             <h1>Quizzical</h1>
             <div className="start-info">
                 <p className="start-more-info">The simple React Quiz app by</p>
-                <a className="author d-flex flex-column align-items-center justify-content-center" href="https://johnsethsalazar.netlify.app/">John Seth Salazar</a>
+                <a className="author d-flex flex-column align-items-center justify-content-center" href="https://johnsethsalazar.netlify.app/" target="_blank" rel="noreferrer">John Seth Salazar</a>
             </div>
             <button className="btn btn-start" onClick={handleStartQuiz}>Start Quiz</button>
         </div>
