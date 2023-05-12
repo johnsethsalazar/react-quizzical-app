@@ -52,31 +52,33 @@ export default function Questions() {
 
   // Highlight selected choice
   const handleChoiceClick = (questionIndex, choiceIndex) => {
-    setSelectedChoice(prevChoice => {
-      const updatedChoice = [...prevChoice]
-      updatedChoice[questionIndex] = choiceIndex
-      return updatedChoice
-    })
+    if(!showResult){
+      setSelectedChoice(prevChoice => {
+        const updatedChoice = [...prevChoice]
+        updatedChoice[questionIndex] = choiceIndex
+        return updatedChoice
+      })
+    }
   }
 
   // Function to check answer and show correct answers and display the score when 'Check Answers' button is clicked
   const handleCheckAnswers = () => {
-    setShowCorrectAnswers(true)
     setShowResult(true)
-
+    setShowCorrectAnswers(true)
+  
     let count = 0
     questions.forEach((question, questionIndex) => {
-      const isCorrectAnswer = selectedChoice[questionIndex] === shuffledChoices.indexOf(he.decode(question.correct_answer))
-      if(isCorrectAnswer){
+      const selectedAnswer = shuffledChoices[questionIndex][selectedChoice[questionIndex]]
+      const isCorrectAnswer = selectedAnswer === question.correct_answer
+      if (isCorrectAnswer) {
         count++
       }
     })
     setCorrectAnswerCount(count)
-  }
+  }  
 
   //function to reset the game and load new set of questions
   const handlePlayAgain = () => {
-    setPlayAgain(true)
     setLoading(true)
     setSelectedChoice([])
     setShowCorrectAnswers(false)
@@ -91,6 +93,8 @@ export default function Questions() {
       }, 1000)
       setQuestions(data.results)
     })
+
+    setPlayAgain(true)
   }
 
   return (
@@ -122,7 +126,7 @@ export default function Questions() {
                       className="mb-1 choices-btn"
                       style={buttonStyle}
                       onClick={() => handleChoiceClick(questionIndex, choiceIndex)}
-                      disabled={isSelected || showCorrectAnswers}
+                      disabled={showResult}
                     >
                       {choice}
                     </Button>

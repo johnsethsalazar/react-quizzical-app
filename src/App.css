@@ -27,6 +27,7 @@ body {
   justify-content: center;
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
 h1, h2, h3, p, button {
@@ -58,11 +59,17 @@ button {
 /* Apply responsive styles for smaller screens */
 @media (max-width: 768px) {
   body {
-    padding: 20px;
+    padding: 40px;
   }
 
   .container {
     padding: 10px;
+  }
+
+  .choices-text {
+    align-items: center;
+    height: auto;
+    padding: 0;
   }
 }
 
@@ -141,6 +148,7 @@ button {
 .choices-text{
   font-family: 'Karla', sans-serif;
   font-weight: 500;
+  height: 100%;
 }
 
 .choices-btn{
