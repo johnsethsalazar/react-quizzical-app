@@ -1,7 +1,7 @@
 ﻿# React Quizzical App
 
 ## Description
-A Quiz app made using React
+A Quiz app made using React ⚛️
 
 ## Project URL
 https://thequizzical.netlify.app/
